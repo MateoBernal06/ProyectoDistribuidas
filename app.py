@@ -140,6 +140,15 @@ def nuevo_producto():
         categoria = request.form['categoria']
         cantidad = int(request.form.get('cantidad', 0))
         
+        # Validaciones del backend
+        if not descripcion or descripcion.strip() == '':
+            flash('La descripción es obligatoria', 'error')
+            return render_template('nuevo_producto.html')
+        
+        if cantidad <= 0:
+            flash('La cantidad debe ser mayor a 0', 'error')
+            return render_template('nuevo_producto.html')
+        
         conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         

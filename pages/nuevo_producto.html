@@ -40,7 +40,8 @@
                                     id="descripcion" 
                                     name="descripcion" 
                                     rows="3" 
-                                    placeholder="Descripción del producto">
+                                    required
+                                    placeholder="Descripción del producto (obligatorio)">
                                 </textarea>
                             </div>
                             
@@ -68,9 +69,10 @@
                                             class="form-control" 
                                             id="cantidad" 
                                             name="cantidad" 
-                                            min="0" 
-                                            value="0" 
-                                            placeholder="0"
+                                            min="1" 
+                                            value="1"
+                                            required
+                                            placeholder="Cantidad mayor a 0"
                                         >
                                     </div>
                                 </div>
@@ -78,7 +80,7 @@
                             
                             <div class="text-center mt-4">
                                 <a href="{{ url_for('index') }}" class="btn btn-secondary me-2">Cancelar</a>
-                                <button type="submit" class="btn btn-primary">Registrar Producto</button>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">Registrar Producto</button>
                             </div>
                         </form>
                     </div>
@@ -87,4 +89,58 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const descripcionField = document.getElementById('descripcion');
+    const cantidadField = document.getElementById('cantidad');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Validación en tiempo real para descripción
+    descripcionField.addEventListener('input', function() {
+        if (this.value.trim() === '') {
+            this.classList.add('is-invalid');
+            this.setCustomValidity('La descripción es obligatoria');
+        } else {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+            this.setCustomValidity('');
+        }
+    });
+    
+    // Validación en tiempo real para cantidad
+    cantidadField.addEventListener('input', function() {
+        const value = parseInt(this.value);
+        if (isNaN(value) || value <= 0) {
+            this.classList.add('is-invalid');
+            this.setCustomValidity('La cantidad debe ser mayor a 0');
+        } else {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+            this.setCustomValidity('');
+        }
+    });
+    
+    // Validación antes de enviar el formulario
+    form.addEventListener('submit', function(e) {
+        const descripcion = descripcionField.value.trim();
+        const cantidad = parseInt(cantidadField.value);
+        
+        if (descripcion === '') {
+            e.preventDefault();
+            descripcionField.focus();
+            alert('La descripción es obligatoria');
+            return;
+        }
+        
+        if (isNaN(cantidad) || cantidad <= 0) {
+            e.preventDefault();
+            cantidadField.focus();
+            alert('La cantidad debe ser mayor a 0');
+            return;
+        }
+    });
+});
+</script>
 {% endblock %}
