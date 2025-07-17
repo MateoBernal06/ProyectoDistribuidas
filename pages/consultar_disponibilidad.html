@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <h2>Consultar Disponibilidad de Productos</h2>
+                <p class="lead">Verifica la disponibilidad de productos</p>
+            </div>
+            <div class="col-4 text-end">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary me-2">Volver al Inicio</a>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="card content-card fade-in-up">
+                    <div class="card-header">
+                        <h5>Búsqueda por Nombre</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="nombre_buscar" class="form-label">Nombre del Producto</label>
+                            <input type="text" class="form-control" id="nombre_buscar" placeholder="Ingrese el nombre del producto">
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary" onclick="buscarPorNombre()">Buscar</button>
+                        </div>
+                        <div id="resultado_nombre" class="availability-result" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card content-card fade-in-up">
+                    <div class="card-header">
+                        <h5>Todos los Productos</h5>
+                    </div>
+                    <div class="card-body">
+                        <button type="button" class="btn btn-info" onclick="cargarTodosProductos()">Ver Todos los Productos</button>
+                        <div id="todos_productos" style="margin-top: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function buscarProducto() {
+    const codigo = document.getElementById('codigo_buscar').value.trim();
+    const resultadoDiv = document.getElementById('resultado_busqueda');
+    
+    if (!codigo) {
+        alert('Por favor ingrese un código de producto');
+        return;
+    }
+    
+    fetch(`/api/producto/${codigo}`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else if (response.status === 404) {
+                throw new Error('Producto no encontrado');
+            } else {
+                throw new Error('Error en la consulta');
+            }
+        })
+        .then(data => {
+            let clase = data.disponible ? 'disponible' : 'no-disponible';
+            let estado = data.disponible ? 'DISPONIBLE' : 'NO DISPONIBLE';
+            
+            resultadoDiv.innerHTML = `
+                <div class="${clase}">
+                    <h6>Código: ${data.codigo}</h6>
+                    <p><strong>Nombre:</strong> ${data.nombre}</p>
+                    <p><strong>Descripción:</strong> ${data.descripcion || 'Sin descripción'}</p>
+                    <p><strong>Categoría:</strong> ${data.categoria}</p>
+                    <p><strong>Cantidad:</strong> ${data.cantidad}</p>
+                    <p><strong>Estado:</strong> ${estado}</p>
+                </div>
+            `;
+            resultadoDiv.style.display = 'block';
+        })
+        .catch(error => {
+            resultadoDiv.innerHTML = `
+                <div class="no-disponible">
+                    <h6>Error</h6>
+                    <p>${error.message}</p>
+                </div>
+            `;
+            resultadoDiv.style.display = 'block';
+        });
+}
+
+function buscarPorNombre() {
+    const nombre = document.getElementById('nombre_buscar').value.trim().toLowerCase();
+    const resultadoDiv = document.getElementById('resultado_nombre');
+    
+    if (!nombre) {
+        alert('Por favor ingrese un nombre de producto');
+        return;
+    }
+    
+    fetch('/api/productos')
+        .then(response => response.json())
+        .then(productos => {
+            const encontrados = productos.filter(p => 
+                p.nombre.toLowerCase().includes(nombre)
+            );
+            
+            if (encontrados.length > 0) {
+                let html = '<div class="disponible"><h6>Productos encontrados:</h6>';
+                encontrados.forEach(p => {
+                    let estado = p.disponible ? 'DISPONIBLE' : 'NO DISPONIBLE';
+                    html += `
+                        <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                            <p><strong>${p.nombre}</strong> (${p.codigo})</p>
+                            <p>Cantidad: ${p.cantidad} - ${estado}</p>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                resultadoDiv.innerHTML = html;
+            } else {
+                resultadoDiv.innerHTML = `
+                    <div class="no-disponible">
+                        <h6>No encontrado</h6>
+                        <p>No se encontraron productos con ese nombre</p>
+                    </div>
+                `;
+            }
+            resultadoDiv.style.display = 'block';
+        })
+        .catch(error => {
+            resultadoDiv.innerHTML = `
+                <div class="no-disponible">
+                    <h6>Error</h6>
+                    <p>Error al buscar productos</p>
+                </div>
+            `;
+            resultadoDiv.style.display = 'block';
+        });
+}
+
+function cargarTodosProductos() {
+    const contenedor = document.getElementById('todos_productos');
+    
+    fetch('/api/productos')
+        .then(response => response.json())
+        .then(productos => {
+            if (productos.length > 0) {
+                let html = `
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Categoría</th>
+                                    <th>Cantidad</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                productos.forEach(p => {
+                    let badgeClass = p.disponible ? 'bg-success' : 'bg-danger';
+                    let estado = p.disponible ? 'Disponible' : 'Sin stock';
+                    
+                    html += `
+                        <tr>
+                            <td><strong>${p.codigo}</strong></td>
+                            <td>${p.nombre}</td>
+                            <td>${p.descripcion || 'Sin descripción'}</td>
+                            <td>${p.categoria}</td>
+                            <td>${p.cantidad}</td>
+                            <td><span class="badge ${badgeClass}">${estado}</span></td>
+                        </tr>
+                    `;
+                });
+                
+                html += '</tbody></table></div>';
+                contenedor.innerHTML = html;
+            } else {
+                contenedor.innerHTML = '<p class="text-center">No hay productos registrados</p>';
+            }
+        })
+        .catch(error => {
+            contenedor.innerHTML = '<p class="text-center text-danger">Error al cargar productos</p>';
+        });
+}
+
+// Permitir buscar con Enter
+document.getElementById('codigo_buscar').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        buscarProducto();
+    }
+});
+
+document.getElementById('nombre_buscar').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        buscarPorNombre();
+    }
+});
+</script>
+{% endblock %}

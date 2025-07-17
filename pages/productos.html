@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>Productos</h2>
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary me-2">Volver al Inicio</a>
+                    <a href="{{ url_for('nuevo_producto') }}" class="btn btn-success">Crear Producto</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                {% if productos %}
+                <div class="card content-card fade-in-up">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Categoría</th>
+                                        <th>Cantidad</th>
+                                        <th>Estado</th>
+                                        <th>Fecha de Registro</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for producto in productos %}
+                                    <tr>
+                                        <td><strong>{{ producto[1] }}</strong></td>
+                                        <td>{{ producto[2] }}</td>
+                                        <td>{{ producto[3] or 'Sin descripción' }}</td>
+                                        <td>{{ producto[4] }}</td>
+                                        <td>{{ producto[5] }}</td>
+                                        <td>
+                                            {% if producto[5] > 0 %}
+                                                <span class="badge bg-success">Disponible</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Sin stock</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ producto[6] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="card content-card fade-in-up">
+                    <div class="card-body text-center">
+                        <h5>No hay productos registrados en el sistema</h5>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

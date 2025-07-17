@@ -1,0 +1,51 @@
+# Ignorar archivos de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Ignorar archivos de entorno virtual
+venv/
+env/
+ENV/
+
+# Ignorar archivos de base de datos
+*.db
+*.sqlite
+*.sqlite3
+
+# Ignorar archivos de Docker
+.dockerignore
+
+# Ignorar archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignorar logs
+*.log
+
+# Ignorar archivos temporales
+*.tmp
+*.temp

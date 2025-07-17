@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2>Sistema de Gestión de Productos</h2>
+                <div class="alert alert-info">
+                    <strong>Nodo actual:</strong> {{ node_name }} | <strong>Puerto:</strong> {{ port }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card content-card text-center fade-in-up">
+                    <div class="card-body">
+                        <h5 class="card-title">Visualizar Productos</h5>
+                        <p class="card-text">Visualizar inventario de productos</p>
+                        <a href="{{ url_for('productos') }}" class="btn btn-primary">Ver Productos</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card content-card text-center fade-in-up">
+                    <div class="card-body">
+                        <h5 class="card-title">Crear Productos</h5>
+                        <p class="card-text">Registrar un nuevo producto en el sistema</p>
+                        <a href="{{ url_for('nuevo_producto') }}" class="btn btn-success">Agregar Producto</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card content-card text-center fade-in-up">
+                    <div class="card-body">
+                        <h5 class="card-title">Consultar Productos</h5>
+                        <p class="card-text">Verificar disponibilidad del producto</p>
+                        <a href="{{ url_for('consultar_disponibilidad') }}" class="btn btn-info">Consultar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

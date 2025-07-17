@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card content-card fade-in-up">
+                    <div class="card-header">
+                        <h4 class="mb-0">Crear Producto</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="codigo" class="form-label">Código del Producto</label>
+                                        <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            id="codigo" 
+                                            name="codigo" 
+                                            required 
+                                            placeholder="Ej: PROD001"
+                                        >
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="nombre" class="form-label">Nombre del Producto</label>
+                                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea 
+                                    class="form-control" 
+                                    id="descripcion" 
+                                    name="descripcion" 
+                                    rows="3" 
+                                    placeholder="Descripción del producto">
+                                </textarea>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="categoria" class="form-label">Categoría</label>
+                                        <select class="form-control" id="categoria" name="categoria" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="Electrónicos">Electrónicos</option>
+                                            <option value="Alimentación">Alimentación</option>
+                                            <option value="Vestimenta">Vestimenta</option>
+                                            <option value="Hogar">Hogar</option>
+                                            <option value="Oficina">Oficina</option>
+                                            <option value="Deportes">Deportes</option>
+                                            <option value="Otros">Otros</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="cantidad" class="form-label">Cantidad Inicial</label>
+                                        <input 
+                                            type="number" 
+                                            class="form-control" 
+                                            id="cantidad" 
+                                            name="cantidad" 
+                                            min="0" 
+                                            value="0" 
+                                            placeholder="0"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <a href="{{ url_for('index') }}" class="btn btn-secondary me-2">Cancelar</a>
+                                <button type="submit" class="btn btn-primary">Registrar Producto</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
